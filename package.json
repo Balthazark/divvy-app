@@ -1,0 +1,5 @@
+{
+  "name": "divvy-app",
+  "workspaces": ["packages/*"],
+  "private": true
+}
