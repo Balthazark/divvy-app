@@ -1,7 +1,5 @@
 # **How to contribute**
 
-We are using GitHub Issues and Pull Requests to structure and organize changes to the project. Pull requests are always welcome! Below are specific instructions for maintainers:
-
 ## GitHub workflow
 
 ### 1. Create Issue
