@@ -6,7 +6,7 @@ We are using GitHub Issues and Pull Requests to structure and organize changes t
 
 ### 1. Create Issue
 
-The workflow pipeline starts with someone creating a issue, this could be for a feature request or for reporting a bug bug for example. This is done through [the issues page](https://github.com/modmark-org/modmark/issues). The templates are self-explanatory, and after this, the issue on the "markmod" project board below the "projects" header.
+The workflow pipeline starts with someone creating a issue, this could be for a feature request or for reporting a bug bug for example. This is done through [the issues page](https://github.com/Balthazark/divvy-app/issues). The templates are self-explanatory, and after this, the issue on the "markmod" project board below the "projects" header.
 
 ### 2. Create a branch
 
@@ -42,6 +42,6 @@ When the code is committed, you need to push it to the main repository. To do th
 
 ### 5. Make a Pull Request
 
-To rebase your branch into `main`, open a pull request on [GitHub](https://github.com/modmark-org/modmark/pulls). To be able to rebase this, one other person has to do a code review approve it, and it has to pass all the tests. The pull request message should contain a description of what you have done, and must include the following text:
+To rebase your branch into `main`, open a pull request on [GitHub](https://github.com/Balthazark/divvy-app/pulls). To be able to rebase this, one other person has to do a code review approve it, and it has to pass all the tests. The pull request message should contain a description of what you have done, and must include the following text:
 
 > Resolves: GH-[issue-no]
