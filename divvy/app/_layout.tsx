@@ -50,6 +50,7 @@ function RootLayoutNav() {
    <Stack>
     <Stack.Screen name="(tabs)" options={{ headerShown: false}}></Stack.Screen>
     <Stack.Screen name="login" options={{ headerShown: false}}></Stack.Screen>
+    <Stack.Screen name="createGroup" options={{title: 'Create group'}}/>
    </Stack>
   );
 }
