@@ -3,7 +3,7 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAr2tmM4vG7QAAtpnwC45E29H5FWk4cF3k",
+  apiKey: process.env.API_KEY,
   authDomain: "divvy-e1582.firebaseapp.com",
   projectId: "divvy-e1582",
   storageBucket: "divvy-e1582.appspot.com",
