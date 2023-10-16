@@ -30,7 +30,7 @@ export default function TabOneScreen() {
     <View className="flex-1 items-center justify-start w-screen bg-white">
       <View className="w-3/4 mt-10">
         <TouchableOpacity
-          onPress={() => router.push("/createGroup")}
+          onPress={() => router.push("/group")}
           className=" w-full p-2 rounded-xl items-center border"
         >
           <Text className="text-black font-bold text-base">
