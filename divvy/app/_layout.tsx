@@ -2,8 +2,6 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import LoginPage from "./login";
-import { View } from "react-native";
 
 //Main entry point for root layout
 //TODO, add auth here, render stack if authed, otherwise load signup/Login page.
