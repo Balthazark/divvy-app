@@ -1,7 +1,13 @@
 import { useState } from "react";
-import { View, Text } from "react-native"
+import { View, Text, TouchableOpacity } from "react-native"
 import { ScrollView } from "react-native-gesture-handler";
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { router, useLocalSearchParams } from "expo-router";
+import { DocumentData, QueryDocumentSnapshot, QuerySnapshot, collection, collectionGroup, doc, getDoc, query, where } from "firebase/firestore";
+import { db } from "../config/firebase";
+import { useCollection, useCollectionData, useDocument } from "react-firebase-hooks/firestore";
+
 
 
 interface GroupProps{
@@ -9,6 +15,7 @@ interface GroupProps{
     name: string,
     users: string[]
 }
+
 
 const FirstRoute = () => (
     <View className="bg-white h-full w-full z-10" />
@@ -21,45 +28,48 @@ const addNewCategory = () =>(
   
   const renderScene = SceneMap({
     first: FirstRoute,
-    second: FirstRoute,
-    third: FirstRoute,
-    four: FirstRoute,
   });
 
   const renderTabBar = (props:any) => (
-    // <View className="flex-1 flex-row max-h-10 bg-white justify-between">
         <TabBar
             {...props}
             indicatorStyle={{ backgroundColor: 'black' }}
             labelStyle={{color:'black'}}
             className='bg-white text-black'
             scrollEnabled={true}
-        />
-    /* <View  className="bg-yellow-500 h-10 w-10 justify-center items-center rounded-full -left-2 z-20"><Text> + </Text></View> */
-    /* </View> */
-   
+        />   
   );
 
 export default function Group(props:GroupProps){
-
     const [index, setIndex] = useState(0);
     const [routes] = useState([
       { key: 'first', title: 'All items' },
-      { key: 'second', title: 'Second' },
-      { key:'third', title: 'Third'},
-      { key:'four', title:'Four'}
     ]);
- 
 
+    const params = useLocalSearchParams()
+    const groupId = 'AP8BX5jriOJ3PXiPOD48';
 
+    const groupRef = doc(db,'groups',groupId)
+    const [group,loading,error] = useDocument(groupRef)
+    const catCollection = collection(db,'groups',groupId,'categories')
+    const [categories,loading1,error1] = useCollection(catCollection)
+    const allItemsCollection = collectionGroup(db,'Items')
+    const q = query(allItemsCollection,where('inGroup','==',groupId))
+    const [allItems,loading2,error2] = useCollection(q)
+    
+    console.log(allItems?.docs[0].data())
     return(
-        <TabView
-        
-        renderTabBar={renderTabBar}
+        <View className="flex-1">
+          <TabView
+          renderTabBar={renderTabBar}
           navigationState={{index,routes}}
           renderScene={renderScene}
           onIndexChange={setIndex}
         />
+        <TouchableOpacity onPress={() => router.push({pathname:'/addItem', params:{groupId:'asdas', userId: 'david'}})} className="absolute bottom-10 rounded-full right-5 bg-black w-11 h-11 flex-1 justify-center items-center">
+           <FontAwesome name="plus" color='#FFFFFF' size={20} />
+        </TouchableOpacity>
+        </View>
     )
 }
 
