@@ -24,7 +24,7 @@ export default function TabOneScreen() {
   }
 
   return (
-    <View className="flex-1 items-center justify-start">
+    <View className="flex-1 items-center justify-start w-screen bg-white">
       <View className="w-3/4 mt-10">
         <TouchableOpacity
           onPress={() => router.push("/createGroup")}
@@ -36,8 +36,8 @@ export default function TabOneScreen() {
           </Text>
         </TouchableOpacity>
       </View>
-      <ScrollView className="my-5">
-      <View className="flex-1 justify-center w-full ">
+      <ScrollView className="py-5">
+      <View className="flex-1 justify-center max-w-full ">
         {groups?.docs.map(g => <GroupCard key={g.id} doc={g} />)}
       </View>
       </ScrollView>

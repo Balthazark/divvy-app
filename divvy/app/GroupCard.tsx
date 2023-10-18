@@ -1,38 +1,58 @@
 import { DocumentData, QueryDocumentSnapshot, doc } from "firebase/firestore";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import { View,Text } from "react-native";
-import { db } from "../config/firebase";
+import { View, Text, TouchableOpacity } from "react-native";
+import { db, auth } from "../config/firebase";
 
 interface GroupCardProps {
-    doc: QueryDocumentSnapshot<DocumentData, DocumentData>;
+  doc: QueryDocumentSnapshot<DocumentData, DocumentData>;
 }
 
-export default function GroupCard(props:GroupCardProps){
-    const docId = props.doc.id;
-    const docData=props.doc.data()
+export default function GroupCard(props: GroupCardProps) {
+  const docId = props.doc.id;
+  const docData = props.doc.data();
+  const user = auth.currentUser?.uid;
 
-    return(
-        <View className="mx-5 h-20 rounded-xl border-2 my-1 justify-between p-2"> 
+  return (
+    <TouchableOpacity onPress={() => console.log(docId)}>
+      <View className="mx-5 rounded-md shadow-md bg-white  my-2 justify-between p-4">
         <Text className="text-lg font-bold">{docData.groupName}</Text>
-        <View className="flex-row w-full justify-end">
-            {docData.users?.map((e:any)=> <Avatar key={e} userId={e} />)} 
-        </View>      
-    </View>
-    )
-}
-
-interface AvatarProp{
-    userId: string;
-}
-
-function Avatar(props:AvatarProp){
-    const [user,loading,error] = useDocumentData(doc(db,'users',props.userId))
-
-    return(
-        <View className="w-7 h-7 mx-1 rounded-full bg-yellow-500 justify-center items-center" >
-            <Text>
-            {user?.Name.slice(0,1)}{user?.LastName.slice(0,1)}
-            </Text>
+        <View className="flex-row w-full justify-between mt-5 items-center">
+          <View className="flex-row">
+            <Avatar key={user} isFirst={true} userId={user} />
+            {docData.users
+              ?.filter((e: string) => e !== user)
+              .map((e: string) => (
+                <Avatar key={e} isFirst={false} userId={e} />
+              ))}
+          </View>
+          <Text>15/36 item</Text>
         </View>
-    )
+      </View>
+    </TouchableOpacity>
+  );
+}
+
+interface AvatarProp {
+  userId: string | any;
+  isFirst: boolean;
+}
+
+function Avatar(props: AvatarProp) {
+  const [user, loading, error] = useDocumentData(
+    doc(db, "users", props.userId)
+  );
+
+  return (
+    <View
+      style={{ backgroundColor: `${user?.color}` }}
+      className={`${
+        props.isFirst ? "" : "-left-3"
+      } w-10 h-10 rounded-full border-2 border-white justify-center items-center`}
+    >
+      <Text className="text-gray-700">
+        {user?.Name.slice(0, 1)}
+        {user?.LastName.slice(0, 1)}
+      </Text>
+    </View>
+  );
 }
