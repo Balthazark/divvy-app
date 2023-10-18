@@ -2,15 +2,18 @@ import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import { router } from "expo-router";
 import { collection, query, where } from "firebase/firestore";
 import { auth, db } from "../../config/firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
 export default function TabOneScreen() {
-  const [user] = useAuthState(auth);
-
+  const user = auth.currentUser;
   const groupRef = collection(db, "groups");
-  const q = query(groupRef, where("users", "array-contains", user?.uid));
+    const q = query(groupRef, where("users", "array-contains", user?.uid));
   const [groups, loading, error] = useCollectionData(q);
+
+  if (error) {
+    console.log(error);
+
+  }
 
   if (loading) {
     return (

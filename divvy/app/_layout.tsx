@@ -2,8 +2,6 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import LoginPage from "./login";
-import { View } from "react-native";
 
 //Main entry point for root layout
 //TODO, add auth here, render stack if authed, otherwise load signup/Login page.
@@ -47,10 +45,22 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-   <Stack>
-    <Stack.Screen name="(tabs)" options={{ headerShown: false}}></Stack.Screen>
-    <Stack.Screen name="login" options={{ headerShown: false}}></Stack.Screen>
-    <Stack.Screen name="createGroup" options={{title: 'Create group'}}/>
-   </Stack>
+    <Stack>
+      <Stack.Screen
+        name="(tabs)"
+        options={{ headerShown: false }}
+      ></Stack.Screen>
+      <Stack.Screen
+        name="login"
+        options={{ headerShown: false }}
+      ></Stack.Screen>
+      <Stack.Screen
+        name="signup"
+        options={{
+          presentation: "modal", title: "Signup"
+        }}
+      />
+      <Stack.Screen name="createGroup" options={{ title: "Create group" }} />
+    </Stack>
   );
 }

@@ -26,24 +26,7 @@ export default function LoginPage() {
     return unsubscribe;
   }, []);
 
-  const handleSignup = async () => {
-    try {
-      const userCredentials = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      console.log("Registered with:", userCredentials.user.email);
-    } catch (error) {
-      if (error instanceof Error) {
-        alert(error.message);
-      } else {
-        console.error("Unexpected error:", error);
-      }
-    }
-  };
-
-  const handleSignIn = async () => {
+    const handleSignIn = async () => {
     try {
       const userCredentials = await signInWithEmailAndPassword(
         auth,
@@ -89,7 +72,7 @@ export default function LoginPage() {
           <Text className="text-white font-bold text-base">Login</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={handleSignup}
+          onPress={() => router.push("/signup")}
           className="bg-white border-[#0782F9] border-2 w-full p-2 rounded-xl items-center mt-1.5"
         >
           <Text className="text-[#0782F9] font-bold text-base">Register</Text>
