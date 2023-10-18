@@ -1,14 +1,17 @@
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { router } from "expo-router";
 import { collection, query, where } from "firebase/firestore";
 import { auth, db } from "../../config/firebase";
+import GroupCard from "../GroupCard";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 
 export default function TabOneScreen() {
   const user = auth.currentUser;
   const groupRef = collection(db, "groups");
-    const q = query(groupRef, where("users", "array-contains", user?.uid));
+
+  const q = query(groupRef, where("users", "array-contains", user?.uid));
   const [groups, loading, error] = useCollectionData(q);
+
 
   if (error) {
     console.log(error);
@@ -24,7 +27,7 @@ export default function TabOneScreen() {
   }
 
   return (
-    <View className="flex-1 items-center justify-start">
+    <View className="flex-1 items-center justify-start w-screen bg-white">
       <View className="w-3/4 mt-10">
         <TouchableOpacity
           onPress={() => router.push("/createGroup")}
@@ -36,12 +39,11 @@ export default function TabOneScreen() {
           </Text>
         </TouchableOpacity>
       </View>
-      <View className="flex-1 justify-center h-full">
-        {groups?.map((group) => (
-          /*REVEIW: Better key here, groupName might not always be unique */
-          <Text key={group.groupName}>Group {group.groupName} </Text>
-        ))}
+      <ScrollView className="py-5">
+      <View className="flex-1 justify-center max-w-full ">
+        {groups?.docs.map(g => <GroupCard key={g.id} doc={g} />)}
       </View>
+      </ScrollView>
     </View>
   );
 }
