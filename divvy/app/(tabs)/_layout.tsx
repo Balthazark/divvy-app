@@ -31,20 +31,6 @@ export default function TabLayout() {
         options={{
           title: 'Groups',
           tabBarIcon: ({ color }) => <TabBarIcon name="group" color={color} />,
-          headerRight: () => (
-            <Link href="/signup" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={ '#000'}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
         }}
       />
       <Tabs.Screen

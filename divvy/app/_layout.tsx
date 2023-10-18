@@ -45,10 +45,22 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-   <Stack>
-    <Stack.Screen name="(tabs)" options={{ headerShown: false}}></Stack.Screen>
-    <Stack.Screen name="login" options={{ headerShown: false}}></Stack.Screen>
-    <Stack.Screen name="createGroup" options={{title: 'Create group'}}/>
-   </Stack>
+    <Stack>
+      <Stack.Screen
+        name="(tabs)"
+        options={{ headerShown: false }}
+      ></Stack.Screen>
+      <Stack.Screen
+        name="login"
+        options={{ headerShown: false }}
+      ></Stack.Screen>
+      <Stack.Screen
+        name="signup"
+        options={{
+          presentation: "modal", title: "Signup"
+        }}
+      />
+      <Stack.Screen name="createGroup" options={{ title: "Create group" }} />
+    </Stack>
   );
 }
