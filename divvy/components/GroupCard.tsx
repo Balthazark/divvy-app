@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { db, auth } from "../config/firebase";
 
 interface GroupCardProps {
-  doc: QueryDocumentSnapshot<DocumentData, DocumentData>;
+  doc: DocumentData;
 }
 
 export default function GroupCard(props: GroupCardProps) {
@@ -42,6 +42,8 @@ function Avatar(props: AvatarProp) {
     doc(db, "users", props.userId)
   );
 
+  console.log(user, "USERS");
+
   return (
     <View
       style={{ backgroundColor: `${user?.color}` }}
@@ -50,8 +52,8 @@ function Avatar(props: AvatarProp) {
       } w-10 h-10 rounded-full border-2 border-white justify-center items-center`}
     >
       <Text className="text-gray-700">
-        {user?.Name.slice(0, 1)}
-        {user?.LastName.slice(0, 1)}
+        {user?.name.slice(0, 1)}
+        {user?.lastName.slice(0, 1)}
       </Text>
     </View>
   );

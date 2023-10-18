@@ -1,16 +1,16 @@
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { router } from "expo-router";
-import { collection, query, where } from "firebase/firestore";
+import { collection, orderBy, query, where } from "firebase/firestore";
 import { auth, db } from "../../config/firebase";
-import GroupCard from "../GroupCard";
-import { useCollectionData } from "react-firebase-hooks/firestore";
+import { useCollection } from "react-firebase-hooks/firestore";
+import GroupCard from "../../components/GroupCard";
 
 export default function TabOneScreen() {
   const user = auth.currentUser;
   const groupRef = collection(db, "groups");
 
-  const q = query(groupRef, where("users", "array-contains", user?.uid));
-  const [groups, loading, error] = useCollectionData(q);
+  const q = query(groupRef, where("users", "array-contains", user?.uid), orderBy("createdAt", "desc"));
+  const [groups, loading, error] = useCollection(q);
 
 
   if (error) {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   View,
   Text,
@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { auth, db } from "../config/firebase";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { router } from "expo-router";
 
@@ -20,6 +20,7 @@ export default function CreateGroup() {
       const groupData = {
         groupName: groupName,
         users: [user?.uid],
+        createdAt: serverTimestamp()
       };
       const docRef = await addDoc(collection(db, "groups"), groupData);
       console.log("new group with id: " + docRef.id);
