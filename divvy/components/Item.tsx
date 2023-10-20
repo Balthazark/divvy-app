@@ -83,7 +83,7 @@ export default function Item(props: ItemProps) {
             <Avatar userId={props.ownedBy} />
           </TouchableOpacity>
         )}
-        <Text className="mx-5 text-lg">{props.name}</Text>
+        <Text className="py-5 mx-5 text-lg">{props.name}</Text>
       </View>
       <Checkbox
         value={isChecked}

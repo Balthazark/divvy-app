@@ -6,7 +6,7 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import React, { useMemo, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
 import { ItemGroups } from "../../types/transformations";
-import Item from "../../components/item";
+import Item from "../../components/Item";
 
 export default function MyItemsScreen() {
   const renderTabBar = (props: any) => (
@@ -108,6 +108,7 @@ export default function MyItemsScreen() {
                           ownedBy={item.ownedBy}
                           groupId={item.inGroup}
                           inCategory={item.inCategory}
+                          disableAssign={true}
                         ></Item>
                       ))}
                     </View>
