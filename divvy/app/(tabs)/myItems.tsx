@@ -3,10 +3,9 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { auth, db } from "../../config/firebase";
 import { collectionGroup, doc, query, setDoc, where } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
 import { ItemGroups } from "../../types/transformations";
-import Checkbox from "expo-checkbox";
 import Item from "../../components/item";
 
 export default function MyItemsScreen() {
@@ -25,7 +24,46 @@ export default function MyItemsScreen() {
     const q = query(allItemsCollection, where("ownedBy", "==", user?.uid));
 
     const [itemCollection, loading, error] = useCollection(q);
-    console.log("collection", itemCollection);
+    const itemGroups: ItemGroups = useMemo(() => {
+      const itemGroups: ItemGroups = [];
+      itemCollection?.docs.forEach((item) => {
+        const { inGroup, inCategory, itemName, groupName, isChecked, ownedBy } =
+          item.data();
+        const itemId = item.id;
+
+        let group = itemGroups.find((group) => group.groupId === inGroup);
+
+        if (!group) {
+          group = {
+            groupId: inGroup,
+            groupName: groupName,
+            categories: [],
+          };
+          itemGroups.push(group);
+        }
+
+        let category = group.categories.find(
+          (cat) => cat.category === inCategory
+        );
+
+        if (!category) {
+          category = { category: inCategory, items: [] };
+          group.categories.push(category);
+        }
+
+        category.items.push({
+          itemName,
+          isChecked,
+          itemId,
+          inGroup,
+          inCategory,
+          ownedBy,
+        });
+      });
+
+      return itemGroups;
+    }, [itemCollection]);
+    
 
     if (loading)
       return (
@@ -43,65 +81,7 @@ export default function MyItemsScreen() {
         </View>
       );
 
-    const itemGroups: ItemGroups = [];
-    itemCollection?.docs.forEach((item) => {
-      const { inGroup, inCategory, itemName, groupName, isChecked, ownedBy } =
-        item.data();
-      const itemId = item.id;
-
-      let group = itemGroups.find((group) => group.groupId === inGroup);
-
-      if (!group) {
-        group = {
-          groupId: inGroup,
-          groupName: groupName, // or use a default name if needed
-          categories: [],
-        };
-        itemGroups.push(group);
-      }
-
-      let category = group.categories.find(
-        (cat) => cat.category === inCategory
-      );
-
-      if (!category) {
-        category = { category: inCategory, items: [] };
-        group.categories.push(category);
-      }
-
-      category.items.push({ itemName, isChecked, itemId, inGroup, inCategory, ownedBy });
-    });
-
-    const CheckBoxWrapper = (props: {
-      initialState: boolean;
-      itemId: string;
-      inGroup: string;
-      inCategory: string;
-    }) => {
-      const [isChecked, setChecked] = useState<boolean>(props.initialState);
-
-      const handleToggle = async (value: boolean) => {
-        const itemRef = doc(
-          db,
-          "groups",
-          props.inGroup,
-          "categories",
-          props.inCategory,
-          "Items",
-          props.itemId
-        );
-        await setDoc(itemRef, { isChecked: value }, { merge: true });
-        setChecked(value);
-      };
-
-      return (
-        <Checkbox
-          value={isChecked}
-          onValueChange={handleToggle}
-          color={isChecked ? "#4630EB" : undefined}
-        />
-      );
-    };
+   
 
     return (
       <FlashList
@@ -109,23 +89,27 @@ export default function MyItemsScreen() {
         renderItem={({ item }) => {
           return (
             <View className="flex-1 items-start justify-center">
-              <Text className="text-xl font-bold pt-4 pl-4" >{item.groupName}</Text>
+              <Text className="text-xl font-bold pt-4 pl-4">
+                {item.groupName}
+              </Text>
               {item.categories.map((category) => {
                 return (
                   <>
-                    <Text className="text-lg pt-2 pl-4 text-grey">{category.category}</Text>
+                    <Text className="text-lg pt-2 pl-4 text-grey">
+                      {category.category}
+                    </Text>
                     <View className="flex-1 items-center justify-center p-3">
-                    {category.items.map((item) => (
-                      <Item
-                        id={item.itemId}
-                        name={item.itemName}
-                        isChecked={item.isChecked}
-                        isBought={false}
-                        ownedBy={item.ownedBy}
-                        groupId={item.inGroup}
-                        inCategory={item.inCategory}
-                      ></Item>
-                    ))}
+                      {category.items.map((item) => (
+                        <Item
+                          id={item.itemId}
+                          name={item.itemName}
+                          isChecked={item.isChecked}
+                          isBought={false}
+                          ownedBy={item.ownedBy}
+                          groupId={item.inGroup}
+                          inCategory={item.inCategory}
+                        ></Item>
+                      ))}
                     </View>
                   </>
                 );
