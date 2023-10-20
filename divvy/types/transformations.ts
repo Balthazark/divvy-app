@@ -8,7 +8,8 @@ export type Item = {
     isChecked: boolean,
     itemId: string,
     inGroup: string,
-    inCategory: string
+    inCategory: string,
+    ownedBy: string
 }
 
 export type Group = {

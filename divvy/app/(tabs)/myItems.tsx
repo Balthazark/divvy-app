@@ -1,20 +1,13 @@
 import { ActivityIndicator, Text, View } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { auth, db } from "../../config/firebase";
-import {
-  collectionGroup,
-  doc,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
-import {
-  useCollection,
-} from "react-firebase-hooks/firestore";
+import { collectionGroup, doc, query, setDoc, where } from "firebase/firestore";
+import { useCollection } from "react-firebase-hooks/firestore";
 import React, { useState } from "react";
 import { FlashList } from "@shopify/flash-list";
 import { ItemGroups } from "../../types/transformations";
 import Checkbox from "expo-checkbox";
+import Item from "../../components/item";
 
 export default function MyItemsScreen() {
   const renderTabBar = (props: any) => (
@@ -52,7 +45,7 @@ export default function MyItemsScreen() {
 
     const itemGroups: ItemGroups = [];
     itemCollection?.docs.forEach((item) => {
-      const { inGroup, inCategory, itemName, groupName, isChecked } =
+      const { inGroup, inCategory, itemName, groupName, isChecked, ownedBy } =
         item.data();
       const itemId = item.id;
 
@@ -76,7 +69,7 @@ export default function MyItemsScreen() {
         group.categories.push(category);
       }
 
-      category.items.push({ itemName, isChecked, itemId, inGroup, inCategory });
+      category.items.push({ itemName, isChecked, itemId, inGroup, inCategory, ownedBy });
     });
 
     const CheckBoxWrapper = (props: {
@@ -88,8 +81,16 @@ export default function MyItemsScreen() {
       const [isChecked, setChecked] = useState<boolean>(props.initialState);
 
       const handleToggle = async (value: boolean) => {
-        const itemRef = doc(db, "groups",props.inGroup,'categories',props.inCategory,'Items',props.itemId);
-        await setDoc(itemRef,{isChecked:value},{merge:true})
+        const itemRef = doc(
+          db,
+          "groups",
+          props.inGroup,
+          "categories",
+          props.inCategory,
+          "Items",
+          props.itemId
+        );
+        await setDoc(itemRef, { isChecked: value }, { merge: true });
         setChecked(value);
       };
 
@@ -107,24 +108,25 @@ export default function MyItemsScreen() {
         data={itemGroups}
         renderItem={({ item }) => {
           return (
-            <View className="flex-1 items-center justify-center">
-              <Text className="text-xl font-bold">{item.groupName}</Text>
+            <View className="flex-1 items-start justify-center">
+              <Text className="text-xl font-bold pt-4 pl-4" >{item.groupName}</Text>
               {item.categories.map((category) => {
                 return (
                   <>
-                    <Text>{category.category}</Text>
-
+                    <Text className="text-lg pt-2 pl-4 text-grey">{category.category}</Text>
+                    <View className="flex-1 items-center justify-center p-3">
                     {category.items.map((item) => (
-                      <View>
-                        <Text>{item.itemName}</Text>
-                        <CheckBoxWrapper
-                          initialState={item.isChecked}
-                          itemId={item.itemId}
-                          inCategory={item.inCategory}
-                          inGroup={item.inGroup}
-                        ></CheckBoxWrapper>
-                      </View>
+                      <Item
+                        id={item.itemId}
+                        name={item.itemName}
+                        isChecked={item.isChecked}
+                        isBought={false}
+                        ownedBy={item.ownedBy}
+                        groupId={item.inGroup}
+                        inCategory={item.inCategory}
+                      ></Item>
                     ))}
+                    </View>
                   </>
                 );
               })}
