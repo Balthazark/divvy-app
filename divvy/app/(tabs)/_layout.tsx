@@ -1,6 +1,5 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Redirect, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
+import { Redirect, Tabs } from 'expo-router';
 import { auth } from '../../config/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
@@ -34,10 +33,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="lists"
+        name="myItems"
         options={{
-          title: 'My lists',
-          tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
+          title: 'My items',
+          tabBarIcon: ({ color }) => <TabBarIcon name="tasks" color={color} />,
         }}
       />
        <Tabs.Screen
