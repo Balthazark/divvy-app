@@ -66,6 +66,24 @@ function RootLayoutNav() {
         name="addItem"
         options={{ title: "Add Item", presentation: "modal" }}
       />
+      <Stack.Screen
+        name="addItem"
+        options={{ title: "Add Item", presentation: "modal" }}
+      />
+      <Stack.Screen
+        name="assignUserModal"
+        options={{
+          headerShown: false,
+          presentation: "containedTransparentModal",
+        }}
+      />
+      <Stack.Screen
+        name="removeItemModal"
+        options={{
+          headerShown: false,
+          presentation: "containedTransparentModal",
+        }}
+      />
     </Stack>
   );
 }
