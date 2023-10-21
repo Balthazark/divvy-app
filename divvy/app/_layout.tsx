@@ -66,9 +66,13 @@ function RootLayoutNav() {
       <Stack.Screen name="createGroup" options={{ title: "Create group" }} />
       <Stack.Screen
         name="group"
-        options={{headerTitle(props) {
-            return <Text className="font-bold">{useLocalSearchParams().title}</Text>
-        },}}
+        options={{
+          headerTitle(props) {
+            return (
+              <Text className="font-bold">{useLocalSearchParams().title}</Text>
+            );
+          },
+        }}
       />
       <Stack.Screen
         name="addItem"
@@ -87,6 +91,10 @@ function RootLayoutNav() {
           headerShown: false,
           presentation: "containedTransparentModal",
         }}
+      />
+      <Stack.Screen
+        name="addPurchase"
+        options={{ title: "Add Purchase", presentation: "modal" }}
       />
     </Stack>
   );

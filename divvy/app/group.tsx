@@ -1,10 +1,17 @@
 import { useState } from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity,Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { TabView, TabBar } from "react-native-tab-view";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { router, useLocalSearchParams } from "expo-router";
-import { collectionGroup, doc, query, where } from "firebase/firestore";
+import { Href, router, useLocalSearchParams } from "expo-router";
+import {
+  collection,
+  collectionGroup,
+  doc,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import { auth, db } from "../config/firebase";
 import { useCollection, useDocumentData } from "react-firebase-hooks/firestore";
 import Item, { Avatar } from "../components/Item";
@@ -19,6 +26,20 @@ const Header = (props: { userId: string }) => (
   <View className="mr-3 justify-center">
     <Avatar userId={props.userId} />
   </View>
+);
+
+const AddButton = (props: { pathname: string; groupId: string }) => (
+  <TouchableOpacity
+    onPress={() =>
+      router.push({
+        pathname: props.pathname as Href<string>,
+        params: { groupId: props.groupId },
+      })
+    }
+    className="absolute bottom-10 rounded-full right-5 bg-black w-11 h-11 flex-1 justify-center items-center"
+  >
+    <FontAwesome name="plus" color="#FFFFFF" size={20} />
+  </TouchableOpacity>
 );
 
 const ShoppingList = (props: { groupId: string }) => {
@@ -54,7 +75,7 @@ const MyItems = (props: { groupId: string }) => {
     where("inGroup", "==", props.groupId),
     where("ownedBy", "==", user)
   );
-  const [allItems, loading2, error2] = useCollection(q);
+  const [allItems, loading, error] = useCollection(q);
   if (!allItems) return;
 
   return (
@@ -76,14 +97,36 @@ const MyItems = (props: { groupId: string }) => {
   );
 };
 
+const Purchases = (props: { groupId: string }) => {
+  const user = auth.currentUser;
+  const purchaseRef = collection(db, "groups", props.groupId, "purchases");
+  const q = query(purchaseRef, orderBy("createdAt", "desc"));
+  const [purchases, loading, error] = useCollection(q);
+
+  if(!purchases) return;
+
+  return (
+  <View className="flex-1 flex-col h-full w-full bg-white ">
+    {purchases.docs.map((d) =>(
+      <View className="w-full flex-1 flex-row p-4 max-h-20 items-center justify-between">
+        <View className="flex-row items-center">
+        <Avatar userId={d.data().createdBy} />
+        <Text className="ml-5 font-medium">{d.data().title}</Text>
+        </View>
+        <Text>{d.data().price} kr</Text>
+      </View>
+    ))}
+  </View>);
+};
+
 const renderScene = (route: any, groupId: string) => {
   switch (route.key) {
     case "shopping":
-      return <ShoppingList groupId={groupId}></ShoppingList>;
+      return <ShoppingList groupId={groupId} />;
     case "items":
-      return <MyItems groupId={groupId}></MyItems>;
+      return <MyItems groupId={groupId} />;
     case "purchases":
-      return <ShoppingList groupId={groupId}></ShoppingList>;
+      return <Purchases groupId={groupId} />;
   }
 };
 
@@ -128,17 +171,11 @@ export default function Group(props: GroupProps) {
         onIndexChange={setIndex}
       />
 
-      <TouchableOpacity
-        onPress={() =>
-          router.push({
-            pathname: "/addItem",
-            params: { groupId: "AP8BX5jriOJ3PXiPOD48" },
-          })
-        }
-        className="absolute bottom-10 rounded-full right-5 bg-black w-11 h-11 flex-1 justify-center items-center"
-      >
-        <FontAwesome name="plus" color="#FFFFFF" size={20} />
-      </TouchableOpacity>
+      {routes[index].key !== "purchases" ? (
+        <AddButton pathname="/addItem" groupId={groupId} />
+      ) : (
+        <AddButton pathname="/addPurchase" groupId={groupId} />
+      )}
     </View>
   );
 }
