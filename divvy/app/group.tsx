@@ -132,7 +132,7 @@ export default function Group(props: GroupProps) {
         onPress={() =>
           router.push({
             pathname: "/addItem",
-            params: { groupId: "AP8BX5jriOJ3PXiPOD48" },
+            params: { groupId: groupId },
           })
         }
         className="absolute bottom-10 rounded-full right-5 bg-black w-11 h-11 flex-1 justify-center items-center"
