@@ -29,6 +29,9 @@ export default function AddItem() {
   const handleSubmit = () => {
     if (value === null) return;
     if (value == "add" && newCategory && itemName) {
+      const categorieRef = doc(db,'groups',groupId,'categories',newCategory)
+      setDoc(categorieRef,{})
+
       const docRef = doc(
         collection(db, "groups", groupId, "categories", newCategory, "Items")
       );

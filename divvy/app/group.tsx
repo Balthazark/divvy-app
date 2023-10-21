@@ -170,12 +170,13 @@ export default function Group(props: GroupProps) {
         renderScene={(props: any) => renderScene(props.route, groupId)}
         onIndexChange={setIndex}
       />
-
+      
       {routes[index].key !== "purchases" ? (
         <AddButton pathname="/addItem" groupId={groupId} />
       ) : (
         <AddButton pathname="/addPurchase" groupId={groupId} />
       )}
+
     </View>
   );
 }
