@@ -2,6 +2,7 @@ import { DocumentData, QueryDocumentSnapshot, doc } from "firebase/firestore";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { View, Text, TouchableOpacity } from "react-native";
 import { db, auth } from "../config/firebase";
+import { router } from "expo-router";
 
 interface GroupCardProps {
   doc: DocumentData;
@@ -13,7 +14,7 @@ export default function GroupCard(props: GroupCardProps) {
   const user = auth.currentUser?.uid;
 
   return (
-    <TouchableOpacity onPress={() => console.log(docId)}>
+    <TouchableOpacity onPress={() => router.push({pathname:'/group',params:{groupId:docId,title:docData.groupName}})}>
       <View className="mx-5 rounded-md shadow-md bg-white  my-2 justify-between p-4">
         <Text className="text-lg font-bold">{docData.groupName}</Text>
         <View className="flex-row w-full justify-between mt-5 items-center">
