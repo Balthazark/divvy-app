@@ -80,6 +80,10 @@ function RootLayoutNav() {
           presentation: "containedTransparentModal",
         }}
       />
+      <Stack.Screen
+        name="addFriendModal"
+        options={{ presentation: "modal", title: "Add friend" }}
+      ></Stack.Screen>
     </Stack>
   );
 }

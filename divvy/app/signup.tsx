@@ -28,7 +28,10 @@ export default function RegisterModal() {
       const userMetaData: UserMetaData = {
         name: name,
         lastName: lastName,
+        email: email,
         color: colorList[colorNum],
+        friends: [],
+        friendsRequests: []
       };
       await setDoc(doc(db, "users", userId), userMetaData);
       console.log("added user meta data ");
