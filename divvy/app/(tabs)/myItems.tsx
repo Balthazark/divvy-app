@@ -63,7 +63,6 @@ export default function MyItemsScreen() {
 
       return itemGroups;
     }, [itemCollection]);
-    
 
     if (loading)
       return (
@@ -80,8 +79,6 @@ export default function MyItemsScreen() {
           </Text>
         </View>
       );
-
-   
 
     return (
       <FlashList
@@ -101,6 +98,7 @@ export default function MyItemsScreen() {
                     <View className="flex-1 items-center justify-center p-3">
                       {category.items.map((item) => (
                         <Item
+                          key={item.itemId}
                           id={item.itemId}
                           name={item.itemName}
                           isChecked={item.isChecked}
