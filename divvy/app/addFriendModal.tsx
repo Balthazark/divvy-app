@@ -7,18 +7,23 @@ import {
 } from "react-native";
 
 import { View, Text } from "react-native";
-import { db } from "../config/firebase";
+import { auth, db } from "../config/firebase";
 import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Friend, UserMetaData } from "../types/user";
-import { collection } from "firebase/firestore";
-import { useCollection } from "react-firebase-hooks/firestore";
+import { arrayUnion, collection, doc, updateDoc } from "firebase/firestore";
+import { useCollection, useDocumentData } from "react-firebase-hooks/firestore";
 import { Avatar } from "../components/Item";
+import { router } from "expo-router";
 
 export default function addFriendModal() {
   const [searchParam, setSearchParam] = useState("");
+  const user = auth.currentUser;
+  const [userData, userLoading, userRrror] = useDocumentData(
+    doc(db, "users", user!.uid)
+  );
   const [value, loading, error] = useCollection(collection(db, "users"));
-
+  console.log("USERDATA", userData);
   const filteredUsers = value?.docs.filter((user) => {
     const { email } = user.data();
     return email?.toLowerCase().includes(searchParam.toLowerCase());
@@ -26,10 +31,25 @@ export default function addFriendModal() {
 
   const keyboardVerticalOffset = Platform.OS === "ios" ? 60 : 0;
 
-  const handleFriendRequest = (user: Friend) => {
-    
+  const handleFriendRequest = async (userId: string) => {
+    try {
+      const userDocRef = doc(db, "users", userId);
+      await updateDoc(userDocRef, {
+        friendRequests: arrayUnion({
+          userId: user!.uid,
+          email: userData?.email,
+          name: userData?.name,
+          lastName: userData?.lastName,
+        }),
+      });
+      router.back();
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log("ERROR", error);
+        alert(error);
+      }
+    }
   };
-
 
   return (
     <KeyboardAvoidingView
@@ -61,14 +81,7 @@ export default function addFriendModal() {
                   </View>
 
                   <TouchableOpacity
-                    onPress={() =>
-                      handleFriendRequest({
-                        userId: user.id,
-                        email,
-                        name,
-                        lastName,
-                      })
-                    }
+                    onPress={() => handleFriendRequest(user.id)}
                     className="bg-white border-[#0782F9] border-2 p-2 rounded-xl items-center"
                   >
                     <Text className="text-[#0782F9] font-bold text-base">
