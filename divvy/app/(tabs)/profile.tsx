@@ -2,8 +2,8 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { auth, db } from "../../config/firebase";
 import { signOut } from "firebase/auth";
 import { router } from "expo-router";
-import { useDocument, useDocumentData } from "react-firebase-hooks/firestore";
-import { arrayRemove, doc, updateDoc } from "firebase/firestore";
+import { useDocumentData } from "react-firebase-hooks/firestore";
+import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { Avatar } from "../../components/Item";
 import { Friend } from "../../types/user";
 import { FontAwesome } from "@expo/vector-icons";
@@ -14,9 +14,21 @@ export default function LogoutScreen() {
   const [value, loading, error] = useDocumentData(doc(db, "users", user!.uid));
   const hasFriendRequests = !(value?.friendRequests.length === 0);
 
-  console.log("VALUE USERS", value);
-
-  const handleFriendAccept = async (friendRequest: Friend) => {};
+  const handleFriendAccept = async (friendRequest: Friend) => {
+    try {
+      const userDocRef = doc(db, "users", auth.currentUser!.uid);
+      await updateDoc(userDocRef, {
+        friends: arrayUnion(friendRequest),
+      });
+      await updateDoc(userDocRef, {
+        friendRequests: arrayRemove(friendRequest),
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error);
+      }
+    }
+  };
 
   const handleFriendDecline = async (friendRequest: Friend) => {
     try {
@@ -24,10 +36,8 @@ export default function LogoutScreen() {
       await updateDoc(userDocRef, {
         friendRequests: arrayRemove(friendRequest),
       });
-      console.log("FINISHED");
     } catch (error) {
       if (error instanceof Error) {
-        console.log("ERROR", error);
         alert(error);
       }
     }
@@ -63,7 +73,9 @@ export default function LogoutScreen() {
                 <Avatar userId={friendRequest.userId} />
                 <Text className="px-5 text-md">{friendRequest.email}</Text>
                 <View className="flex-row-reverse items-center justify-end">
-                  <TouchableOpacity className="w-10 h-10 bg-gray-100 rounded-full justify-center items-center">
+                  <TouchableOpacity
+                  onPress={() => handleFriendAccept(friendRequest)}
+                   className="w-10 h-10 bg-gray-100 rounded-full justify-center items-center">
                     <FontAwesome name="check" size={24} color="green" />
                   </TouchableOpacity>
                   <TouchableOpacity

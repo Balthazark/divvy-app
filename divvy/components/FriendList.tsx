@@ -20,7 +20,9 @@ export default function FriendList() {
           return (
             <View className="flex-row items-center" key={friend.userId}>
               <Avatar userId={friend.userId} />
-              <Text className="px-5 text-md">{friend.email}</Text>
+              <Text className="px-5 text-md">
+                {friend.name + " " + friend.lastName}
+              </Text>
             </View>
           );
         })}

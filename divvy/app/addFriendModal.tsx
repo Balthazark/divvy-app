@@ -10,7 +10,7 @@ import { View, Text } from "react-native";
 import { auth, db } from "../config/firebase";
 import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { Friend, UserMetaData } from "../types/user";
+import { UserMetaData } from "../types/user";
 import { arrayUnion, collection, doc, updateDoc } from "firebase/firestore";
 import { useCollection, useDocumentData } from "react-firebase-hooks/firestore";
 import { Avatar } from "../components/Item";
@@ -19,11 +19,11 @@ import { router } from "expo-router";
 export default function addFriendModal() {
   const [searchParam, setSearchParam] = useState("");
   const user = auth.currentUser;
-  const [userData, userLoading, userRrror] = useDocumentData(
+  const [userData, userLoading, userError] = useDocumentData(
     doc(db, "users", user!.uid)
   );
   const [value, loading, error] = useCollection(collection(db, "users"));
-  console.log("USERDATA", userData);
+
   const filteredUsers = value?.docs.filter((user) => {
     const { email } = user.data();
     return email?.toLowerCase().includes(searchParam.toLowerCase());
