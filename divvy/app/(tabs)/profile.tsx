@@ -57,38 +57,45 @@ export default function LogoutScreen() {
     }
   };
 
+  const truncateEmail = (email: string) => {
+    if (email.length <= 26) {
+      return email;
+    }
+    return email.substring(0, 26) + "...";
+  };
+
   const FriendRequests = () => {
     if (!hasFriendRequests) {
       return null;
     }
     return (
-      <View className="flex-1 flex-row content-center px-4 max-h-20 items-center bg-white border-b border-slate-300">
-        <View className="flex-1 flex-row items-center">
-          {value?.friendRequests.map((friendRequest: Friend) => {
-            return (
-              <View
-                className="flex-row items-center"
-                key={friendRequest.userId}
-              >
-                <Avatar userId={friendRequest.userId} />
-                <Text className="px-5 text-md">{friendRequest.email}</Text>
-                <View className="flex-row-reverse items-center justify-end">
-                  <TouchableOpacity
-                  onPress={() => handleFriendAccept(friendRequest)}
-                   className="w-10 h-10 bg-gray-100 rounded-full justify-center items-center">
-                    <FontAwesome name="check" size={24} color="green" />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => handleFriendDecline(friendRequest)}
-                    className="w-10 h-10 bg-gray-100 rounded-full justify-center items-center ml-8 mr-3"
-                  >
-                    <FontAwesome name="times" size={24} color="black" />
-                  </TouchableOpacity>
-                </View>
+      <View className="bg-white">
+        {value?.friendRequests.map((friendRequest: Friend) => {
+          return (
+            <View
+              className="flex-row items-center justify-between space-x-2 border-b border-slate-300 p-4 mx-auto"
+              key={friendRequest.userId}
+            >
+              <Avatar userId={friendRequest.userId} />
+              <View className="flex-grow">
+                <Text className="text-md">{truncateEmail(friendRequest.email)}</Text>
               </View>
-            );
-          })}
-        </View>
+
+              <TouchableOpacity
+                onPress={() => handleFriendAccept(friendRequest)}
+                className="w-10 h-10 bg-gray-100 rounded-full justify-center items-center"
+              >
+                <FontAwesome name="check" size={24} color="green" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => handleFriendDecline(friendRequest)}
+                className="w-10 h-10 bg-gray-100 rounded-full justify-center items-center"
+              >
+                <FontAwesome name="times" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+          );
+        })}
       </View>
     );
   };
