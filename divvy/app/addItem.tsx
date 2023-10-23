@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { auth, db } from "../config/firebase";
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -49,6 +49,7 @@ export default function AddItem() {
       };
       setDoc(docRef, data);
       console.log("add item");
+      router.back();
     }
     if (value !== "add" && itemName) {
       const docRef = doc(
@@ -68,39 +69,47 @@ export default function AddItem() {
       };
       setDoc(docRef, data);
       console.log("add item");
+
+      router.back();
     }
 
-    router.back();
   };
 
   return (
-    <View className="w-full">
+    <KeyboardAvoidingView behavior={'padding'} keyboardVerticalOffset={90} className="w-full flex-1 items-center justify-between bg-white p-4">
+      <View className="w-full">
       <TextInput
-        className="text-black h-10"
+        className="border-2 w-full h-8 rounded-xl border-slate-300 mb-5 p-2"
         onChange={(event) => setItem(event.nativeEvent.text)}
-        placeholder="Item"
+        placeholder="Item name"
       ></TextInput>
+      <View className="w-full h-20 flex-row">
       {value === "add" ? (
         <TextInput
           onChange={(event) => setCategory(event.nativeEvent.text)}
           placeholder="New category"
+          className="border-2 w-1/2 h-12 rounded-xl border-slate-300 mb-5 p-2"
         ></TextInput>
       ) : null}
-      <View className="w-3/4">
         <DropDownPicker
           open={open}
           items={dataset}
           value={value}
           setOpen={setOpen}
           setValue={setValue}
+          placeholder="Choose category"
           textStyle={{ color: "black" }}
-          labelStyle={{ color: "black" }}
-          style={{ borderColor: "gray" }}
+          labelStyle={{ color: "gary" }}
+          maxHeight={200}
+          dropDownContainerStyle={{borderColor: "rgb(203 213 225)",width:'50%', borderWidth:2,}}
+          containerStyle={{borderColor: "rgb(203 213 225)"}}
+          style={{ borderColor: "rgb(203 213 225)",width:'50%', height:8,borderWidth:2,borderRadius:12,zIndex:9999}}
         />
       </View>
-      <TouchableOpacity className="h-20 my-20" onPress={handleSubmit}>
-        <Text>Add item</Text>
+      </View>
+      <TouchableOpacity className="bg-[#0782F9] w-1/2 p-2 rounded-xl justify-self-end items-center mb-10"onPress={handleSubmit}>
+        <Text className="text-white font-bold text-base">Add item</Text>
       </TouchableOpacity>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
