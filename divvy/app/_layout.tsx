@@ -93,6 +93,10 @@ function RootLayoutNav() {
         }}
       />
       <Stack.Screen
+        name="addFriendModal"
+        options={{ presentation: "modal", title: "Add friend" }}
+      />
+      <Stack.Screen
         name="addPurchase"
         options={{ title: "Add Purchase", presentation: "modal" }}
       />
