@@ -1,7 +1,9 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
+import { useLocalSearchParams } from "expo-router";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
+import { Text } from "react-native";
 
 //Main entry point for root layout
 //TODO, add auth here, render stack if authed, otherwise load signup/Login page.
@@ -63,6 +65,16 @@ function RootLayoutNav() {
       />
       <Stack.Screen name="createGroup" options={{ title: "Create group" }} />
       <Stack.Screen
+        name="group"
+        options={{
+          headerTitle(props) {
+            return (
+              <Text className="font-bold">{useLocalSearchParams().title}</Text>
+            );
+          },
+        }}
+      />
+      <Stack.Screen
         name="addItem"
         options={{ title: "Add Item", presentation: "modal" }}
       />
@@ -83,7 +95,11 @@ function RootLayoutNav() {
       <Stack.Screen
         name="addFriendModal"
         options={{ presentation: "modal", title: "Add friend" }}
-      ></Stack.Screen>
+      />
+      <Stack.Screen
+        name="addPurchase"
+        options={{ title: "Add Purchase", presentation: "modal" }}
+      />
     </Stack>
   );
 }
