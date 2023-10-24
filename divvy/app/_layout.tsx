@@ -100,6 +100,10 @@ function RootLayoutNav() {
         name="addPurchase"
         options={{ title: "Add Purchase", presentation: "modal" }}
       />
+      <Stack.Screen
+        name="addGroupMemberModal"
+        options={{ title: "Add group members", presentation: "modal" }}
+      />
     </Stack>
   );
 }

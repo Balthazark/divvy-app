@@ -78,7 +78,9 @@ export default function LogoutScreen() {
             >
               <Avatar userId={friendRequest.userId} />
               <View className="flex-grow">
-                <Text className="text-md">{truncateEmail(friendRequest.email)}</Text>
+                <Text className="text-md">
+                  {truncateEmail(friendRequest.email)}
+                </Text>
               </View>
 
               <TouchableOpacity
@@ -107,7 +109,7 @@ export default function LogoutScreen() {
       )}
       <FriendRequests></FriendRequests>
       <Text className=" py-4">Friends</Text>
-      <FriendList></FriendList>
+      <FriendList interactive={false} onlySelectedFriends={false}></FriendList>
       <TouchableOpacity
         onPress={() => router.push("/addFriendModal")}
         className="bg-white border-[#0782F9] border-2 w-80 p-2 rounded-xl items-center m-4 "
