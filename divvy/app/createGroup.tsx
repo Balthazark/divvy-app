@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import { auth, db } from "../config/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { router } from "expo-router";
-import { atom, useAtomValue } from "jotai";
+import { atom, useAtom } from "jotai";
 import FriendList from "../components/FriendList";
 
 export const selectedFriendsAtom = atom<string[]>([]);
@@ -19,17 +19,18 @@ export default function CreateGroup() {
   const [user] = useAuthState(auth);
   const [groupName, setGroupName] = useState("");
 
-  const selectedFriends = useAtomValue(selectedFriendsAtom);
+  const [value, setValue] = useAtom(selectedFriendsAtom);
 
   const handleSubmit = async () => {
     if (groupName.length > 0) {
       const groupData = {
         groupName: groupName,
-        users: [user?.uid, ...selectedFriends],
+        users: [user?.uid, ...value],
         createdAt: serverTimestamp(),
       };
       const docRef = await addDoc(collection(db, "groups"), groupData);
       console.log("new group with id: " + docRef.id);
+      setValue([]);
       router.replace("/");
     } else {
       alert("No group name");
@@ -50,7 +51,6 @@ export default function CreateGroup() {
         />
         <FriendList interactive={true} onlySelectedFriends={true}></FriendList>
       </View>
-      
 
       <View className="w-3/4 mt-8 space-y-4">
         <TouchableOpacity

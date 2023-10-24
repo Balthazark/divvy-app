@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, TouchableOpacity,Text } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { TabView, TabBar } from "react-native-tab-view";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -39,6 +39,20 @@ const AddButton = (props: { pathname: string; groupId: string }) => (
     className="absolute bottom-10 rounded-full right-5 bg-black w-11 h-11 flex-1 justify-center items-center"
   >
     <FontAwesome name="plus" color="#FFFFFF" size={20} />
+  </TouchableOpacity>
+);
+
+const AddMemberButton = (props: { groupId: string }) => (
+  <TouchableOpacity
+    onPress={() =>
+      router.push({
+        pathname: "/addGroupMemberToExistingGroup",
+        params: { groupId: props.groupId },
+      })
+    }
+    className="p-4"
+  >
+    <Text className="text-lg font-bold text-blue-500">Add member +</Text>
   </TouchableOpacity>
 );
 
@@ -103,20 +117,21 @@ const Purchases = (props: { groupId: string }) => {
   const q = query(purchaseRef, orderBy("createdAt", "desc"));
   const [purchases, loading, error] = useCollection(q);
 
-  if(!purchases) return;
+  if (!purchases) return;
 
   return (
-  <View className="flex-1 flex-col h-full w-full bg-white ">
-    {purchases.docs.map((d) =>(
-      <View className="w-full flex-1 flex-row p-4 max-h-20 items-center justify-between">
-        <View className="flex-row items-center">
-        <Avatar userId={d.data().createdBy} />
-        <Text className="ml-5 font-medium">{d.data().title}</Text>
+    <View className="flex-1 flex-col h-full w-full bg-white ">
+      {purchases.docs.map((d) => (
+        <View className="w-full flex-1 flex-row p-4 max-h-20 items-center justify-between">
+          <View className="flex-row items-center">
+            <Avatar userId={d.data().createdBy} />
+            <Text className="ml-5 font-medium">{d.data().title}</Text>
+          </View>
+          <Text>{d.data().price} kr</Text>
         </View>
-        <Text>{d.data().price} kr</Text>
-      </View>
-    ))}
-  </View>);
+      ))}
+    </View>
+  );
 };
 
 const renderScene = (route: any, groupId: string) => {
@@ -163,20 +178,21 @@ export default function Group(props: GroupProps) {
         {group.users.map((e: string) => (
           <Header key={e} userId={e} />
         ))}
+        <AddMemberButton groupId={groupId}></AddMemberButton>
       </ScrollView>
+
       <TabView
         renderTabBar={renderTabBar}
         navigationState={{ index, routes }}
         renderScene={(props: any) => renderScene(props.route, groupId)}
         onIndexChange={setIndex}
       />
-      
+
       {routes[index].key !== "purchases" ? (
         <AddButton pathname="/addItem" groupId={groupId} />
       ) : (
         <AddButton pathname="/addPurchase" groupId={groupId} />
       )}
-
     </View>
   );
 }

@@ -12,6 +12,7 @@ import { selectedFriendsAtom } from "../app/createGroup";
 type FriendListProps = {
   interactive: boolean;
   onlySelectedFriends: boolean;
+  membersToExclude?: string[];
 };
 
 type FriendProps = {
@@ -80,6 +81,7 @@ const FriendElement = ({ friendData, interactive, checked }: FriendProps) => {
 export default function FriendList({
   interactive,
   onlySelectedFriends,
+  membersToExclude,
 }: FriendListProps) {
   const [selectedFriends] = useAtom(selectedFriendsAtom);
 
@@ -120,6 +122,25 @@ export default function FriendList({
                 friendData={friend}
                 interactive={true}
                 checked={isChecked}
+              ></FriendElement>
+            );
+          })}
+      </View>
+    );
+  }
+
+  if (membersToExclude?.length !== 0 && membersToExclude) {
+    return (
+      <View className="bg-white">
+        {value?.friends
+          .filter((friend: Friend) => !membersToExclude.includes(friend.userId))
+          .map((friend: Friend) => {
+            return (
+              <FriendElement
+                key={friend.userId}
+                friendData={friend}
+                interactive={true}
+                checked={false}
               ></FriendElement>
             );
           })}

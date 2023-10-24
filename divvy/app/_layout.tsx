@@ -104,6 +104,11 @@ function RootLayoutNav() {
         name="addGroupMemberModal"
         options={{ title: "Add group members", presentation: "modal" }}
       />
+       <Stack.Screen
+        name="addGroupMemberToExistingGroup"
+        options={{ title: "Add group members", presentation: "modal" }}
+      />
     </Stack>
+    
   );
 }
