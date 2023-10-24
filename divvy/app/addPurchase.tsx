@@ -61,12 +61,12 @@ export default function AddPurchase() {
     } else refs.push(docRef);
 
     setItems(refs);
-    console.log(!price);
-    console.log(!title);
-    console.log("refs", checkedItems.length);
   }
 
   const handleSubmit = () => {
+    if(!price || !title ||checkedItems.length < 1){
+      return;
+    }
     const docRef = doc(collection(db, "groups", groupId, "purchases"));
     const data = {
       createdAt: serverTimestamp(),
@@ -106,7 +106,6 @@ export default function AddPurchase() {
       </ScrollView>
       <TouchableOpacity
         onPress={() => handleSubmit()}
-        disabled={checkedItems.length < 1 || !price || !title}
         className="bg-blue-500 rounded-xl w-1/2 h-10 mb-10 items-center justify-center"
       >
         <Text className="text-white font-medium">Add Purchase</Text>

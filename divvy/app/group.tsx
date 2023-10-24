@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, TouchableOpacity,Text } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { TabView, TabBar } from "react-native-tab-view";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -103,20 +103,29 @@ const Purchases = (props: { groupId: string }) => {
   const q = query(purchaseRef, orderBy("createdAt", "desc"));
   const [purchases, loading, error] = useCollection(q);
 
-  if(!purchases) return;
+  if (!purchases) return;
 
   return (
-  <View className="flex-1 flex-col h-full w-full bg-white ">
-    {purchases.docs.map((d) =>(
-      <View className="w-full flex-1 flex-row p-4 max-h-20 items-center justify-between">
-        <View className="flex-row items-center">
-        <Avatar userId={d.data().createdBy} />
-        <Text className="ml-5 font-medium">{d.data().title}</Text>
-        </View>
-        <Text>{d.data().price} kr</Text>
-      </View>
-    ))}
-  </View>);
+    <ScrollView className="flex-1 flex-col h-full w-full bg-white ">
+      {purchases.docs.map((d) => (
+        <TouchableOpacity
+          onPress={() =>
+            router.push({
+              pathname: "/purchaseInfoModal",
+              params: {id: d.id, title:d.data().title },
+            })
+          }
+          className="w-full flex-1 flex-row p-4 max-h-20 items-center justify-between"
+        >
+          <View className="flex-row items-center">
+            <Avatar userId={d.data().createdBy} />
+            <Text className="ml-5 font-medium">{d.data().title}</Text>
+          </View>
+          <Text>{d.data().price} kr</Text>
+        </TouchableOpacity>
+      ))}
+    </ScrollView>
+  );
 };
 
 const renderScene = (route: any, groupId: string) => {
@@ -170,13 +179,12 @@ export default function Group(props: GroupProps) {
         renderScene={(props: any) => renderScene(props.route, groupId)}
         onIndexChange={setIndex}
       />
-      
+
       {routes[index].key !== "purchases" ? (
         <AddButton pathname="/addItem" groupId={groupId} />
       ) : (
         <AddButton pathname="/addPurchase" groupId={groupId} />
       )}
-
     </View>
   );
 }

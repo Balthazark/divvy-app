@@ -100,6 +100,17 @@ function RootLayoutNav() {
         name="addPurchase"
         options={{ title: "Add Purchase", presentation: "modal" }}
       />
+      <Stack.Screen
+        name="purchaseInfoModal"
+        options={{
+          headerTitle(props) {
+            return (
+              <Text className="font-bold">{useLocalSearchParams().title}</Text>
+            );
+          },
+          presentation:'modal'
+        }}
+      />
     </Stack>
   );
 }
