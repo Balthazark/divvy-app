@@ -17,6 +17,7 @@ import {
   ActivityIndicator,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from "react-native";
 import { useEffect, useState } from "react";
 import Checkbox from "expo-checkbox";
@@ -32,6 +33,7 @@ export default function AddPurchase() {
   const [checkedItems, setItems] = useState<DocumentReference[]>([]);
   const [price, setPrice] = useState<number>();
   const [title, setTitle] = useState<string>();
+  const [isPriceSet, setIsPrice] = useState<boolean>(false);
   const allItemsCollection = collectionGroup(db, "Items");
   const q = query(
     allItemsCollection,
@@ -59,49 +61,98 @@ export default function AddPurchase() {
     } else refs.push(docRef);
 
     setItems(refs);
-    console.log(!price);
-    console.log(!title)
-    console.log("refs", checkedItems);
   }
 
   const handleSubmit = () => {
-    const docRef = doc(
-        collection(db, "groups", groupId,'purchases')
-    );
-    const data = {
-        createdAt: serverTimestamp(),
-        createdBy: user,
-        price: price,
-        title:title,
-        items: checkedItems.map(e => e.id)
+    if(!price || !title ||checkedItems.length < 1){
+      return;
     }
+    const docRef = doc(collection(db, "groups", groupId, "purchases"));
+    const data = {
+      createdAt: serverTimestamp(),
+      createdBy: user,
+      price: price,
+      title: title,
+      items: checkedItems.map((e) => e.id),
+    };
 
-    checkedItems.forEach(ref => {
-        setDoc(ref,{isBought:true,inPurchase:docRef.id},{merge:true})
-    })
+    checkedItems.forEach((ref) => {
+      setDoc(ref, { isBought: true, inPurchase: docRef.id }, { merge: true });
+    });
 
-    setDoc(docRef,data);
-    router.back()
+    setDoc(docRef, data);
+    router.back();
   };
 
-  return (
-    <View className="h-full bg-white w-full justify-center items-center">
-      <TextInput
-        keyboardType="numeric"
-        onChange={(e) => setPrice(parseInt(e.nativeEvent.text))}
-        className="border-2 w-1/2 h-8 rounded-xl border-slate-300 mb-5 p-2"
-        placeholder="Price"
-      >
-        Price
-      </TextInput>
+  return isPriceSet ? (
+    <View className="h-full bg-white w-full justify-center items-center py-4">
       <TextInput
         onChange={(e) => setTitle(e.nativeEvent.text)}
-        className="border-2 w-1/2 h-8 rounded-xl border-slate-300 mb-5 p-2"
-        placeholder="Price"
+        className="border-2 w-3/4 h-9 align-top rounded-xl border-slate-300 mb-5 p-2"
+        placeholder="Title"
+        textAlignVertical={"center"}
+      />
+      <Text className="font-normal text-lg">What items did you buy?</Text>
+      <ScrollView className="w-full border-t border-slate-300 my-4">
+        {allItems.docs.map((d) => (
+          <ItemsCard
+            key={d.id}
+            item={d.data().itemName}
+            category={d.data().inCategory}
+            docRef={d.ref}
+            setItem={refHandler}
+          />
+        ))}
+      </ScrollView>
+      <TouchableOpacity
+        onPress={() => handleSubmit()}
+        className="bg-blue-500 rounded-xl w-1/2 h-10 mb-10 items-center justify-center"
       >
-        Price
-      </TextInput>
-      <ScrollView className="w-full border-t border-slate-300">
+        <Text className="text-white font-medium">Add Purchase</Text>
+      </TouchableOpacity>
+    </View>
+  ) : (
+    <KeyboardAvoidingView
+      behavior={"padding"}
+      keyboardVerticalOffset={120}
+      className="w-full bg-white flex-1 justify-between items-center"
+    >
+      <View className="flex-row items-center mt-40">
+        <TextInput
+          autoFocus={true}
+          keyboardType="numeric"
+          placeholder="Price"
+          className="text-3xl"
+          onChange={(e) => setPrice(parseInt(e.nativeEvent.text))}
+        ></TextInput>
+      </View>
+      <View className="flex-1 max-h-10 w-full items-end jusify-center">
+        <TouchableOpacity
+          disabled={!price}
+          onPress={() => setIsPrice(true)}
+          className="bg-[#0782F9] py-2 px-10 rounded-xl items-center mr-5"
+        >
+          <Text className="text-white">Next</Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
+  );
+}
+
+/* 
+
+
+/*
+
+<View className="h-full bg-white w-full justify-center items-center py-4">
+      <TextInput
+        onChange={(e) => setTitle(e.nativeEvent.text)}
+        className="border-2 w-3/4 h-12 text-base align-top rounded-xl border-slate-300 mb-5 p-2"
+        placeholder="Title"
+        textAlignVertical={'center'}
+      />
+      <Text className="font-bold text-lg">What items did you buy?</Text>
+      <ScrollView className="w-full border-t border-slate-300 my-4">
         {allItems.docs.map((d) => (
           <ItemsCard
             key={d.id}
@@ -119,9 +170,8 @@ export default function AddPurchase() {
       >
         <Text className="text-white font-medium">Add Purchase</Text>
       </TouchableOpacity>
-    </View>
-  );
-}
+    </View> 
+  */
 
 function ItemsCard(props: {
   item: string;
