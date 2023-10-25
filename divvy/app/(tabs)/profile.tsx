@@ -112,7 +112,7 @@ export default function LogoutScreen() {
   };
 
   return (
-    <View className="flex-1 items-start justify-start p-3">
+    <View className="flex-1 justify-start p-3">
       {!hasFriendRequests ? null : (
         <Text className="py-4">Friend requests</Text>
       )}
@@ -121,16 +121,17 @@ export default function LogoutScreen() {
       <FriendList interactive={false} onlySelectedFriends={false}></FriendList>
       <TouchableOpacity
         onPress={() => router.push("/addFriendModal")}
-        className="bg-white border-[#0782F9] border-2 w-80 p-2 rounded-xl items-center m-4 "
+        className="bg-white border-[#0782F9] border-2 w-80 p-2 rounded-xl items-center m-4 self-center"
       >
         <Text className="text-[#0782F9] font-bold text-base">Add friends</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={handleSignout}
-        className="bg-[#0782F9] w-80 p-2 rounded-xl items-center m-4 mt-auto"
+        className="bg-[#0782F9] w-80 p-2 rounded-xl items-center m-4 mt-auto self-center"
       >
         <Text className="text-white font-bold text-base">Sign out</Text>
       </TouchableOpacity>
+      
     </View>
   );
 }
