@@ -2,7 +2,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { auth, db } from "../../config/firebase";
 import { signOut } from "firebase/auth";
 import { router } from "expo-router";
-import { useDocumentData } from "react-firebase-hooks/firestore";
+import { useDocumentData} from "react-firebase-hooks/firestore";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { Avatar } from "../../components/Item";
 import { Friend } from "../../types/user";
@@ -12,14 +12,23 @@ import FriendList from "../../components/FriendList";
 export default function LogoutScreen() {
   const user = auth.currentUser;
   const [value, loading, error] = useDocumentData(doc(db, "users", user!.uid));
-  const hasFriendRequests = !(value?.friendRequests.length === 0);
+  const hasFriendRequests = !(value?.friendRequests?.length === 0);
 
   const handleFriendAccept = async (friendRequest: Friend) => {
     try {
       const userDocRef = doc(db, "users", auth.currentUser!.uid);
+      const friendRef = doc(db,'users',friendRequest.userId)
       await updateDoc(userDocRef, {
         friends: arrayUnion(friendRequest),
       });
+      await updateDoc(friendRef,{
+        friends: arrayUnion({
+          email: value!.email,
+          lastName:value!.lastName,
+          name: value!.name,
+          userId: auth.currentUser!.uid
+        })
+      })
       await updateDoc(userDocRef, {
         friendRequests: arrayRemove(friendRequest),
       });
@@ -70,7 +79,7 @@ export default function LogoutScreen() {
     }
     return (
       <View className="bg-white">
-        {value?.friendRequests.map((friendRequest: Friend) => {
+        {value?.friendRequests?.map((friendRequest: Friend) => {
           return (
             <View
               className="flex-row items-center justify-between space-x-2 border-b border-slate-300 p-4 mx-auto"

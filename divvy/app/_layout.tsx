@@ -107,6 +107,15 @@ function RootLayoutNav() {
        <Stack.Screen
         name="addGroupMemberToExistingGroup"
         options={{ title: "Add group members", presentation: "modal" }}
+        name="purchaseInfoModal"
+        options={{
+          headerTitle(props) {
+            return (
+              <Text className="font-bold">{useLocalSearchParams().title}</Text>
+            );
+          },
+          presentation:'modal'
+        }}
       />
     </Stack>
     

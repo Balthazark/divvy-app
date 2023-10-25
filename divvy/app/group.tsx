@@ -120,17 +120,25 @@ const Purchases = (props: { groupId: string }) => {
   if (!purchases) return;
 
   return (
-    <View className="flex-1 flex-col h-full w-full bg-white ">
+    <ScrollView className="flex-1 flex-col h-full w-full bg-white ">
       {purchases.docs.map((d) => (
-        <View className="w-full flex-1 flex-row p-4 max-h-20 items-center justify-between">
+        <TouchableOpacity
+          onPress={() =>
+            router.push({
+              pathname: "/purchaseInfoModal",
+              params: {id: d.id, title:d.data().title },
+            })
+          }
+          className="w-full flex-1 flex-row p-4 max-h-20 items-center justify-between"
+        >
           <View className="flex-row items-center">
             <Avatar userId={d.data().createdBy} />
             <Text className="ml-5 font-medium">{d.data().title}</Text>
           </View>
           <Text>{d.data().price} kr</Text>
-        </View>
+        </TouchableOpacity>
       ))}
-    </View>
+    </ScrollView>
   );
 };
 

@@ -1,12 +1,27 @@
-import { ActivityIndicator, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { auth, db } from "../../config/firebase";
-import { collectionGroup, doc, query, setDoc, where } from "firebase/firestore";
+import {
+  collection,
+  collectionGroup,
+  doc,
+  orderBy,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import React, { useMemo, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
 import { ItemGroups } from "../../types/transformations";
-import Item from "../../components/Item";
+import Item, { Avatar } from "../../components/Item";
+import { router } from "expo-router";
 
 export default function MyItemsScreen() {
   const renderTabBar = (props: any) => (
@@ -121,11 +136,40 @@ export default function MyItemsScreen() {
     );
   };
 
-  const PurchaseRoute = () => (
-    <View className="flex-1 items-center justify-center">
-      <Text className="text-xl font-bold">Tab Two</Text>
-    </View>
-  );
+  const PurchaseRoute = () => {
+    const user = auth.currentUser;
+    const purchaseRef = collectionGroup(db, "purchases");
+    const q = query(
+      purchaseRef,
+      where("createdBy", "==", user?.uid),
+      orderBy("createdAt", "desc")
+    );
+    const [purchases, loading, error] = useCollection(q);
+
+    if (!purchases) return;
+
+    return (
+      <ScrollView className="flex-1 flex-col h-full w-full bg-white ">
+        {purchases.docs.map((d) => (
+          <TouchableOpacity
+            onPress={() =>
+              router.push({
+                pathname: "/purchaseInfoModal",
+                params: { id: d.id, title: d.data().title },
+              })
+            }
+            className="w-full flex-1 flex-row p-4 max-h-20 items-center justify-between"
+          >
+            <View className="flex-row items-center">
+              <Avatar userId={d.data().createdBy} />
+              <Text className="ml-5 font-medium">{d.data().title}</Text>
+            </View>
+            <Text>{d.data().price} kr</Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    );
+  };
 
   const renderScene = SceneMap({
     first: ItemsRoute,
