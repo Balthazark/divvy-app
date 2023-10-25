@@ -42,6 +42,20 @@ const AddButton = (props: { pathname: string; groupId: string }) => (
   </TouchableOpacity>
 );
 
+const AddMemberButton = (props: { groupId: string }) => (
+  <TouchableOpacity
+    onPress={() =>
+      router.push({
+        pathname: "/addGroupMemberToExistingGroup",
+        params: { groupId: props.groupId },
+      })
+    }
+    className="p-4"
+  >
+    <Text className="text-lg font-bold text-blue-500">Add member +</Text>
+  </TouchableOpacity>
+);
+
 const ShoppingList = (props: { groupId: string }) => {
   const allItemsCollection = collectionGroup(db, "Items");
   const q = query(allItemsCollection, where("inGroup", "==", props.groupId));
@@ -172,7 +186,9 @@ export default function Group(props: GroupProps) {
         {group.users.map((e: string) => (
           <Header key={e} userId={e} />
         ))}
+        <AddMemberButton groupId={groupId}></AddMemberButton>
       </ScrollView>
+
       <TabView
         renderTabBar={renderTabBar}
         navigationState={{ index, routes }}
