@@ -35,7 +35,7 @@ export default function TabOneScreen() {
         >
           <Text className="text-white font-bold text-base">
             {" "}
-            + Add new party &#129395;
+            + Add new group &#129395;
           </Text>
         </TouchableOpacity>
       </View>
