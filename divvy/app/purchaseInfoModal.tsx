@@ -15,6 +15,7 @@ import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { db } from "../config/firebase";
 import { ActivityIndicator, View,Text,ScrollView } from "react-native";
 import { Avatar } from "../components/Item";
+import { StatusBar } from "expo-status-bar";
 
 export default function PurchaseInfo() {
   const params = useLocalSearchParams();
@@ -59,6 +60,7 @@ export default function PurchaseInfo() {
       </View>
       ))}
     </ScrollView>
+    <StatusBar style="light"></StatusBar>
     </View>
   )
 }

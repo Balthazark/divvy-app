@@ -127,6 +127,7 @@ const Purchases = (props: { groupId: string }) => {
   if (!purchases) return;
 
   return (
+    <>
     <ScrollView className="flex-1 flex-col h-full w-full bg-white ">
       {purchases.docs.map((d) => (
         <TouchableOpacity
@@ -146,6 +147,18 @@ const Purchases = (props: { groupId: string }) => {
         </TouchableOpacity>
       ))}
     </ScrollView>
+     <TouchableOpacity
+     onPress={() =>
+       router.push({
+         pathname: '/balanceModal',
+         params: { groupId: props.groupId },
+       })
+     }
+     className="absolute bottom-[120px] rounded-full right-5 border-4 border-[#0782F9] w-16 h-16 flex-1 justify-center items-center"
+   >
+     <FontAwesome name="money" color="#0782F9" size={20} />
+   </TouchableOpacity>
+   </>
   );
 };
 

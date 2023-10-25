@@ -122,6 +122,7 @@ function RootLayoutNav() {
           presentation: "modal",
         }}
       />
+      <Stack.Screen name="balanceModal" options={{title:'Balance', presentation:'modal'}} />
     </Stack>
   );
 }
