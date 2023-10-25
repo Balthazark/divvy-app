@@ -31,9 +31,9 @@ export default function TabOneScreen() {
       <View className="w-3/4 mt-10">
         <TouchableOpacity
           onPress={() => router.push("/createGroup")}
-          className=" w-full p-2 rounded-xl items-center border"
+          className=" w-full p-2 rounded-xl items-center bg-[#0782F9]"
         >
-          <Text className="text-black font-bold text-base">
+          <Text className="text-white font-bold text-base">
             {" "}
             + Add new party &#129395;
           </Text>
