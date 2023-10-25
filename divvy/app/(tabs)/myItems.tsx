@@ -166,7 +166,8 @@ export default function MyItemsScreen() {
   const renderTabBar = (props: any) => (
     <TabBar
       {...props}
-      indicatorStyle={{ backgroundColor: "blue" }}
+      indicatorStyle={{ backgroundColor: "#0782F9" }}
+      activeColor="#0782F9"
       style={{ backgroundColor: "white" }}
       labelStyle={{ color: "black", fontSize: 12 }}
     />
