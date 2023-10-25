@@ -4,6 +4,9 @@ import { useLocalSearchParams } from "expo-router";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import { Text } from "react-native";
+import { LogBox } from "react-native"
+
+LogBox.ignoreAllLogs(true)
 
 //Main entry point for root layout
 //TODO, add auth here, render stack if authed, otherwise load signup/Login page.

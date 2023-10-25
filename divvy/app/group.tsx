@@ -50,9 +50,9 @@ const AddMemberButton = (props: { groupId: string }) => (
         params: { groupId: props.groupId },
       })
     }
-    className="p-4"
+    className="w-10 h-10 mt-2 bg-gray-200 rounded-full justify-center items-center"
   >
-    <Text className="text-lg font-bold text-blue-500">Add member +</Text>
+    <Text className="text-lg font-bold text-black">+</Text>
   </TouchableOpacity>
 );
 
