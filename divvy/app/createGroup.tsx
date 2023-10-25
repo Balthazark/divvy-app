@@ -55,17 +55,17 @@ export default function CreateGroup() {
       <View className="w-3/4 mt-8 space-y-4">
         <TouchableOpacity
           onPress={() => router.push("/addGroupMemberModal")}
-          className="bg-[#0782F9] p-2 rounded-xl items-center"
+          className="bg-white border-[#0782F9] border-2 w-full p-2 rounded-xl items-center mt-1.5"
         >
-          <Text className="text-white font-bold text-base">+ Add members</Text>
+          <Text className="text-[#0782F9] font-bold text-base">+ Add members</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={handleSubmit}
-          className=" w-full p-2 rounded-xl items-center border"
+          className=" w-full p-2 rounded-xl items-center bg-[#0782F9]"
         >
-          <Text className="text-black font-bold text-base">
+          <Text className="text-white font-bold text-base">
             {" "}
-            + Add new party &#129395;
+            + Add new group &#129395;
           </Text>
         </TouchableOpacity>
       </View>
