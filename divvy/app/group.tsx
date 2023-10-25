@@ -156,7 +156,7 @@ const renderScene = (route: any, groupId: string) => {
 const renderTabBar = (props: any) => (
   <TabBar
     {...props}
-    indicatorStyle={{ backgroundColor: "black" }}
+    indicatorStyle={{ backgroundColor: "blue" }}
     labelStyle={{ color: "black", fontSize: 12 }}
     activeColor="blue"
     className="bg-white text-black"
@@ -181,8 +181,8 @@ export default function Group(props: GroupProps) {
   if (!group) return;
 
   return (
-    <View className="flex-1">
-      <ScrollView horizontal className="max-h-14 pl-3 flex-1 bg-white">
+    <View className="flex-1 bg-white">
+      <ScrollView horizontal className="max-h-14 pl-2 m-1 mt-4 flex-1 bg-white">
         {group.users.map((e: string) => (
           <Header key={e} userId={e} />
         ))}

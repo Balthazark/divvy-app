@@ -30,7 +30,6 @@ export default function addGroupMemberToExistingGroupModal() {
       router.back();
     } catch (error) {
       if (error instanceof Error) {
-        1;
         alert(error);
       }
     }

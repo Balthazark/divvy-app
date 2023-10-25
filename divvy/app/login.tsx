@@ -8,7 +8,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { auth } from "../config/firebase";
 import {
-  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { router } from "expo-router";
