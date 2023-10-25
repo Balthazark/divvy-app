@@ -19,11 +19,11 @@ export default function GroupCard(props: GroupCardProps) {
         <Text className="text-lg font-bold">{docData.groupName}</Text>
         <View className="flex-row w-full justify-between mt-5 items-center">
           <View className="flex-row">
-            <Avatar key={user} isFirst={true} userId={user} />
+            <Avatar key={user} index={0} isFirst={true} userId={user} />
             {docData.users
               ?.filter((e: string) => e !== user)
-              .map((e: string) => (
-                <Avatar key={e} isFirst={false} userId={e} />
+              .map((e: string,index:number) => (
+                <Avatar index={index+1} key={e} isFirst={false} userId={e} />
               ))}
           </View>
           <Text>15/36 item</Text>
@@ -36,6 +36,7 @@ export default function GroupCard(props: GroupCardProps) {
 interface AvatarProp {
   userId: string | any;
   isFirst: boolean;
+  index: number;
 }
 
 function Avatar(props: AvatarProp) {
@@ -44,13 +45,12 @@ function Avatar(props: AvatarProp) {
   );
 
   console.log(user, "USERS");
+  const indent = (-props.index*12)
 
   return (
     <View
-      style={{ backgroundColor: `${user?.color}` }}
-      className={`${
-        props.isFirst ? "" : "-left-3"
-      } w-10 h-10 rounded-full border-2 border-white justify-center items-center`}
+      style={{ backgroundColor: `${user?.color}`,left:indent }}
+      className="w-10 h-10 rounded-full border-2 border-white justify-center items-center"
     >
       <Text className="text-gray-700">
         {user?.name.slice(0, 1)}
