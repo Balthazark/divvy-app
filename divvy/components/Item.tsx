@@ -46,7 +46,7 @@ export default function Item(props: ItemProps) {
       <View className="flex-1 flex-row content-center px-4 justify-between max-h-20 items-center bg-gray-200 border-b border-slate-300">
         <View className="flex-1 flex-row items-center">
           <Avatar userId={props.ownedBy} />
-          <Text className="mx-5 text-lg">{props.name}</Text>
+          <Text className="mx-5 py-5 text-lg">{props.name}</Text>
         </View>
       </View>
     );

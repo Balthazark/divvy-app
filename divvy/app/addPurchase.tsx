@@ -77,7 +77,7 @@ export default function AddPurchase() {
     };
 
     checkedItems.forEach((ref) => {
-      setDoc(ref, { isBought: true, inPurchase: docRef.id }, { merge: true });
+      setDoc(ref, { isBought: true, inPurchase: docRef.id,isChecked:true }, { merge: true });
     });
 
     setDoc(docRef, data);
@@ -130,9 +130,9 @@ export default function AddPurchase() {
         <TouchableOpacity
           disabled={!price}
           onPress={() => setIsPrice(true)}
-          className="bg-[#0782F9] py-2 px-10 rounded-xl items-center mr-5"
+          className="bg-[#0782F9] py-2 px-5 rounded-lg items-center mr-5"
         >
-          <Text className="text-white">Next</Text>
+          <Text className="text-white font-bold">Next</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

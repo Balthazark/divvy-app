@@ -36,7 +36,7 @@ const AddButton = (props: { pathname: string; groupId: string }) => (
         params: { groupId: props.groupId },
       })
     }
-    className="absolute bottom-10 rounded-full right-5 bg-black w-11 h-11 flex-1 justify-center items-center"
+    className="absolute bottom-10 rounded-full right-5 bg-[#0782F9] w-16 h-16 flex-1 justify-center items-center"
   >
     <FontAwesome name="plus" color="#FFFFFF" size={20} />
   </TouchableOpacity>
@@ -58,12 +58,17 @@ const AddMemberButton = (props: { groupId: string }) => (
 
 const ShoppingList = (props: { groupId: string }) => {
   const allItemsCollection = collectionGroup(db, "Items");
-  const q = query(allItemsCollection, where("inGroup", "==", props.groupId));
+  const q = query(
+    allItemsCollection,
+    where("inGroup", "==", props.groupId),
+    orderBy("isBought", "asc"),
+    orderBy("created", "desc")
+  );
   const [allItems, loading2, error2] = useCollection(q);
   if (!allItems) return;
 
   return (
-    <View className="flex-1 flex-col h-full w-full bg-white ">
+    <ScrollView className="flex-1 flex-col h-full w-full bg-white ">
       {allItems?.docs.map((e) => (
         <Item
           key={e.id}
@@ -77,7 +82,7 @@ const ShoppingList = (props: { groupId: string }) => {
           disableAssign={false}
         />
       ))}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -87,13 +92,15 @@ const MyItems = (props: { groupId: string }) => {
   const q = query(
     allItemsCollection,
     where("inGroup", "==", props.groupId),
-    where("ownedBy", "==", user)
+    where("ownedBy", "==", user),
+    orderBy("isBought", "asc"),
+    orderBy("created", "desc")
   );
   const [allItems, loading, error] = useCollection(q);
   if (!allItems) return;
 
   return (
-    <View className="flex-1 flex-col h-full w-full bg-white ">
+    <ScrollView className="flex-1 flex-col h-full w-full bg-white ">
       {allItems?.docs.map((e) => (
         <Item
           key={e.id}
@@ -107,7 +114,7 @@ const MyItems = (props: { groupId: string }) => {
           disableAssign={false}
         />
       ))}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -126,7 +133,7 @@ const Purchases = (props: { groupId: string }) => {
           onPress={() =>
             router.push({
               pathname: "/purchaseInfoModal",
-              params: {id: d.id, title:d.data().title },
+              params: { id: d.id, title: d.data().title },
             })
           }
           className="w-full flex-1 flex-row p-4 max-h-20 items-center justify-between"
@@ -156,9 +163,9 @@ const renderScene = (route: any, groupId: string) => {
 const renderTabBar = (props: any) => (
   <TabBar
     {...props}
-    indicatorStyle={{ backgroundColor: "blue" }}
+    indicatorStyle={{ backgroundColor: "#0782F9" }}
     labelStyle={{ color: "black", fontSize: 12 }}
-    activeColor="blue"
+    activeColor="#0782F9"
     className="bg-white text-black"
   />
 );

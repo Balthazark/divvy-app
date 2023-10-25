@@ -53,7 +53,7 @@ export default function PurchaseInfo() {
       </View>
       <ScrollView className="w-full mt-2">
       {items?.docs.map(item => (
-        <View className="h-12 w-full flex-col px-2">
+        <View className="h-16 w-full flex-col px-2 my-1 pb-4 border-b border-slate-300">
         <Text className="font-medium text-base mb-2">{item.data().itemName}</Text>
         <Text>{item.data().inCategory}</Text>
       </View>

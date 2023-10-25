@@ -1,5 +1,5 @@
-import { DocumentData, QueryDocumentSnapshot, doc } from "firebase/firestore";
-import { useDocumentData } from "react-firebase-hooks/firestore";
+import { DocumentData, QueryDocumentSnapshot, collectionGroup, doc, orderBy, query, where } from "firebase/firestore";
+import { useCollection, useDocumentData } from "react-firebase-hooks/firestore";
 import { View, Text, TouchableOpacity } from "react-native";
 import { db, auth } from "../config/firebase";
 import { router } from "expo-router";
@@ -12,6 +12,15 @@ export default function GroupCard(props: GroupCardProps) {
   const docId = props.doc.id;
   const docData = props.doc.data();
   const user = auth.currentUser?.uid;
+  const allItemsCollection = collectionGroup(db, "Items");
+  const q = query(
+    allItemsCollection,
+    where("inGroup", "==", docId)
+  );
+  const [allItems, loading2, error2] = useCollection(q);
+  if (!allItems) return;
+
+  const boughtItems = allItems.docs.filter(d => d.data().isChecked).length
 
   return (
     <TouchableOpacity onPress={() => router.push({pathname:'/group',params:{groupId:docId,title:docData.groupName}})}>
@@ -26,7 +35,7 @@ export default function GroupCard(props: GroupCardProps) {
                 <Avatar index={index+1} key={e} isFirst={false} userId={e} />
               ))}
           </View>
-          <Text>15/36 item</Text>
+          <Text>{boughtItems}/{allItems.docs.length} items</Text>
         </View>
       </View>
     </TouchableOpacity>
